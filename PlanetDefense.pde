@@ -16,9 +16,15 @@
   *   the sloppy and poorly    *
   *     documented code.       *
   \****************************/
+  
+//To do:
+  //Projectiles that spiral
+  //Powerup(s)
+  //Waves
+  //Image for laser gun
 
 PImage planetPic[] = new PImage[8];
-PImage asteroid;
+PImage asteroid, big;
 float [][] starPos = new float[2][500];
 int planet = int(random(8));
 boolean laserOn = true;
@@ -59,6 +65,8 @@ void setup()
   }
   asteroid = loadImage("rock.png");
   asteroid.resize(100,0);
+  big = loadImage("rock.png");
+  big.resize(300,0);
   
   //Set Star positions
   for( int i = 0; i < starPos[0].length; i++ )
@@ -68,7 +76,7 @@ void setup()
   }
   
   //Creates meteors
-  for( int i = 0; i < 3; i++)
+  for( int i = 0; i < 1; i++)
     meteors.add( new Meteor() );
     
   loadGame();
@@ -294,11 +302,11 @@ void drawButton()
     noStroke();
     quad(width/2-220,70, width/2-239,51, width/2-239+(480*(laserRecharge/900.0)),51, width/2-219+(440*(laserRecharge/900.0)),70);
     //noStroke();
-    stroke(0,255,0,200);
-    strokeWeight(8);
-    line(width/2-220,80, width/2+220,80);
-    strokeWeight(4);
-    line(width/2-220,80, width/2+220,80);
+    //stroke(0,255,0,200);
+    //strokeWeight(8);
+    //line(width/2-220,80, width/2+220,80);
+    //strokeWeight(4);
+    //line(width/2-220,80, width/2+220,80);
   }
   else
   {
@@ -329,9 +337,14 @@ void drawLaser()
   
   for( Meteor m: meteors )
   {
-    if( laserOn && !m.destroyed && abs( (rotation+PI)%TWO_PI - m.rotation ) < .050 )
+    if( laserOn && !m.destroyed )
+    if( !m.bigOne && abs( (rotation+PI)%TWO_PI - m.rotation ) < .05 ||
+         m.bigOne && abs( (rotation+PI)%TWO_PI - m.rotation ) < .1  )
     {
-      bursts.add( new Explosion( m.distance-50, m.rotation ) );
+      if(m.bigOne)
+        bursts.add( new Explosion( m.distance-100, m.rotation ) );
+      else
+        bursts.add( new Explosion( m.distance-50, m.rotation ) );
       m.health--;
       if(m.health<=0)
       {
