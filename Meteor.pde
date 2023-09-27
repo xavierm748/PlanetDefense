@@ -18,10 +18,10 @@ class Meteor
     maxHealth = 2*int(20/speed);
     health = maxHealth;
     size = 100;
-    if( random(100)<50 )
+    if( random(100) < 5 )
     {
       speed = 0.25;
-      maxHealth = health = 500;
+      maxHealth = health = 300;
       size = 300;
       bigOne = true;
     }
@@ -37,7 +37,10 @@ class Meteor
     if( distance < 160 )
     {
       destroyed = true;
-      damagePlanet();
+      if(!bigOne)
+        damagePlanet(1);
+      else
+        damagePlanet(9);
     }
     push();
       translate(width/2,height/2);

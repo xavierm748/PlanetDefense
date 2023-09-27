@@ -76,7 +76,7 @@ void setup()
   }
   
   //Creates meteors
-  for( int i = 0; i < 1; i++)
+  for( int i = 0; i < 3; i++)
     meteors.add( new Meteor() );
     
   loadGame();
@@ -275,9 +275,9 @@ void drawPlanet()
   image(planetPic[planet], width/2,height/2);
 }
 
-void damagePlanet()
+void damagePlanet( int damage )
 {
-  planetHealth--;
+  planetHealth-=damage;
   if(planetHealth<=0)
   {
     gameOver = true;
@@ -401,7 +401,7 @@ void reset()
   running = false;
   score = 0;
   laserRecharge = 0;
-  gameTimer = 20000;
+  gameTimer = 20000+millis();
   typingName = false;
   showingScores = false;
   name = "";

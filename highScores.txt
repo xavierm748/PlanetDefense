@@ -1,9 +1,9 @@
+CMDR BENNETT
+200
 MR RITCHIE
 182
----
-0
----
-0
+CPT ZAP
+126
 ---
 0
 ---
