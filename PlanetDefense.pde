@@ -105,7 +105,7 @@ void draw()
   
   checkLaserButton();
   
-  if( millis() > gameTimer )
+  if( running && millis() > gameTimer )
   {
     gameTimer += 20000;
     meteors.add( new Meteor() );
@@ -440,6 +440,13 @@ void mousePressed()
     else
       name += letter;
   }
+}
+
+void keyPressed()
+{
+  planet = int(key)-'0'-1;
+  if( planet < 0 || planet > 7 )
+    planet = 2;
 }
 
 void saveGame()
