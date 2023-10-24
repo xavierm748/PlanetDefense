@@ -481,16 +481,16 @@ void mousePressed()
 
 void keyPressed()
 {
-  planet = int(key)-'0'-1;
-  if( planet < 0 || planet > 7 )
-    planet = 2;
+  //planet = int(key)-'0'-1;
+  //if( planet < 0 || planet > 7 )
+  //  planet = 2;
     
-  if( key == 's' )
-  {
-    int swarmCount = int( random( 5,12) );
-    for(int i = 0; i < swarmCount; i++)
-      swarm.add( new Meteor( true ) );
-  }
+  //if( key == 's' )
+  //{
+  //  int swarmCount = int( random( 5,12) );
+  //  for(int i = 0; i < swarmCount; i++)
+  //    swarm.add( new Meteor( swarmCount/3 ) );
+  //}
 }
 
 void saveGame()

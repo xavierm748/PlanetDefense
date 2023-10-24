@@ -29,18 +29,18 @@ class Meteor
     {
       int swarmCount = int( random( 5,12) );
       for(int i = 0; i < swarmCount; i++)
-        swarm.add( new Meteor( true ) );
+        swarm.add( new Meteor( swarmCount/3 ) );
     }
     
     spin = random(TWO_PI);
     spinSpeed = speed/100;
   }
   
-  public Meteor( boolean swarm )
+  public Meteor( int spd )
   {
     do{ rotation = random(TWO_PI); } while( (rotation < 3.85 && rotation > 2.5) || (rotation < 0.6 || rotation > 5.7) );
     distance = 1500;
-    speed = random(1,4);
+    speed = spd;
     maxHealth = 1;
     health = 1;
     size = 50;
@@ -53,7 +53,7 @@ class Meteor
   {
     distance-=speed;
     
-    if( distance < 160 )
+    if( distance < 140 )
     {
       destroyed = true;
       if(!bigOne)
