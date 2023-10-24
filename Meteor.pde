@@ -25,9 +25,28 @@ class Meteor
       size = 300;
       bigOne = true;
     }
+    if( random(100) < 2.5 )
+    {
+      int swarmCount = int( random( 5,12) );
+      for(int i = 0; i < swarmCount; i++)
+        swarm.add( new Meteor( true ) );
+    }
     
     spin = random(TWO_PI);
     spinSpeed = speed/100;
+  }
+  
+  public Meteor( boolean swarm )
+  {
+    do{ rotation = random(TWO_PI); } while( (rotation < 3.85 && rotation > 2.5) || (rotation < 0.6 || rotation > 5.7) );
+    distance = 1500;
+    speed = random(1,4);
+    maxHealth = 1;
+    health = 1;
+    size = 50;
+    
+    spin = random(TWO_PI);
+    spinSpeed = speed/50;
   }
   
   void moveAndDraw()
@@ -51,11 +70,18 @@ class Meteor
         rotate(spin);
         if(bigOne)
           image(big,0,0);
+        else if(size==50)
+          image(small,0,0);
         else
           image(asteroid,0,0);
       pop();
       spin+=spinSpeed;
     pop();
 
+  }
+  
+  float hitBox() //make it easier to hit meteors that are close
+  {
+    return( max( 0.05, (2-distance/300)/10 ) );
   }
 }
