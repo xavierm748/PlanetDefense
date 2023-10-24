@@ -481,9 +481,9 @@ void mousePressed()
 
 void keyPressed()
 {
-  //planet = int(key)-'0'-1;
-  //if( planet < 0 || planet > 7 )
-  //  planet = 2;
+  planet = int(key)-'0'-1;
+  if( planet < 0 || planet > 7 )
+    planet = 2;
     
   //if( key == 's' )
   //{

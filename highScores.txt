@@ -1,15 +1,12 @@
-CHILXIUS
-350
+ZERO FIVE
+424
+3
+THE BRINGER OF CHAOS
+361
 4
-RADD
-190
-8
-JEB
-166
-8
--RUM 
-160
-8
+RUM
+310
+1
 JOE
 150
 8
@@ -19,12 +16,15 @@ JOE
 ZAY DA KID
 136
 8
-WESTON
-133
+Cpt Cody
+70
 8
-Cpt Hector
-100
-2
-Cpt Robbie
+Cpt Alice
 50
-2
+8
+Cpt Bob
+30
+8
+Cpt Doug
+10
+8
