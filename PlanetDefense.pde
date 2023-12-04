@@ -24,19 +24,21 @@
   //Image for laser gun
 
 PImage planetPic[] = new PImage[8];
-PImage asteroid, big;
+PImage planetPicSmall[] = new PImage[8];
+PImage asteroid, big, small;
 float [][] starPos = new float[2][500];
 int planet = int(random(8));
 boolean laserOn = true;
 int laserRecharge = 0;
 
 ArrayList<Meteor> meteors = new ArrayList<Meteor>();
+ArrayList<Meteor> swarm = new ArrayList<Meteor>();
 ArrayList<Explosion> bursts = new ArrayList<Explosion>();
 
 int planetHealth = 10;
 boolean gameOver = false;
 boolean running = false;
-int score = 0;
+float score = 0;
 
 int gameTimer = 20000;
 
@@ -62,11 +64,19 @@ void setup()
       planetPic[i].resize(400,0);
     else
       planetPic[i].resize(200,0);
+      
+    planetPicSmall[i] = loadImage(i+".png");
+    if( i == 5 )
+      planetPicSmall[i].resize(100,0);
+    else
+      planetPicSmall[i].resize(50,0);
   }
   asteroid = loadImage("rock.png");
   asteroid.resize(100,0);
   big = loadImage("rock.png");
   big.resize(300,0);
+  small = loadImage("rock.png");
+  small.resize(50,0);
   
   //Set Star positions
   for( int i = 0; i < starPos[0].length; i++ )
@@ -87,6 +97,13 @@ void setup()
 void draw()
 {
   drawSpace();
+  
+  if(running)
+  {
+    handleMeteors();
+    handleBursts();
+  }
+  
   if(!gameOver)
   {
     drawPlanet();
@@ -96,12 +113,6 @@ void draw()
   }
   else
     handleHighScore();
-  
-  if(running)
-  {
-    handleMeteors();
-    handleBursts();
-  }
   
   checkLaserButton();
   
@@ -116,12 +127,15 @@ void displayScores()
 {
   fill(0,200,0);
   textSize(height/20);
+  tint(255);
   for( int i = 0; i < highScores.length; i++ )
   {
     textAlign(RIGHT);
     text(highScores[i].name+"   ",width/2,height/11.0*(i+1));
     textAlign(LEFT);
-    text(highScores[i].score,width/2,height/11.0*(i+1));
+    text("   "+highScores[i].score,width/2,height/11.0*(i+1));
+    if( highScores[i].world != 8 )
+      image( planetPicSmall[ highScores[i].world ], width/2, height/11.0*(i+1)-20 );
   }
   push();
   noFill();
@@ -245,6 +259,15 @@ void handleMeteors()
         i--;
     }
   }
+  for(int i = 0; i < swarm.size(); i++)
+  {
+    swarm.get(i).moveAndDraw();
+    if( swarm.get(i).destroyed )
+    {
+      swarm.remove(i);
+      i--;
+    }
+  }
 }
 
 void handleBursts()
@@ -265,7 +288,7 @@ void drawScore()
   push();
   textSize(50);
   fill(255);
-  text("Score: " + score,width/2,height/2);
+  text("Score: " + int(score),width/2,height/2);
   pop();
 }
 
@@ -338,7 +361,7 @@ void drawLaser()
   for( Meteor m: meteors )
   {
     if( laserOn && !m.destroyed )
-    if( !m.bigOne && abs( (rotation+PI)%TWO_PI - m.rotation ) < .05 ||
+    if( !m.bigOne && abs( (rotation+PI)%TWO_PI - m.rotation ) < m.hitBox() || //.05 ||
          m.bigOne && abs( (rotation+PI)%TWO_PI - m.rotation ) < .1  )
     {
       if(m.bigOne)
@@ -350,6 +373,20 @@ void drawLaser()
       {
         score++;
         m.destroyed = true;
+      }
+    }
+  }
+  for( Meteor s: swarm )
+  {
+    if( laserOn && !s.destroyed )
+    if(  abs( (rotation+PI)%TWO_PI - s.rotation ) < .05 )
+    {
+      bursts.add( new Explosion( s.distance-50, s.rotation ) );
+      s.health--;
+      if(s.health <= 0)
+      {
+        score+=0.1;
+        s.destroyed = true;
       }
     }
   }
@@ -431,7 +468,7 @@ void mousePressed()
     {
       typingName = false;
       showingScores = true;
-      highScores[highScores.length-1] = new Score( name, score );
+      highScores[highScores.length-1] = new Score( name, int(score), planet );
       sortScores();
       saveGame();
     }
@@ -447,6 +484,13 @@ void keyPressed()
   planet = int(key)-'0'-1;
   if( planet < 0 || planet > 7 )
     planet = 2;
+    
+  //if( key == 's' )
+  //{
+  //  int swarmCount = int( random( 5,12) );
+  //  for(int i = 0; i < swarmCount; i++)
+  //    swarm.add( new Meteor( swarmCount/3 ) );
+  //}
 }
 
 void saveGame()
@@ -458,6 +502,7 @@ void saveGame()
     {
       pw.println( highScores[i].name );
       pw.println( highScores[i].score );
+      pw.println( highScores[i].world );
     }
     
     pw.flush(); //Writes the remaining data to the file
@@ -476,9 +521,9 @@ void loadGame()
   try
   {
     data = loadStrings("highScores.txt");
-    for(; i < data.length; i+=2)
+    for(; i < data.length; i+=3)
     {
-      highScores[i/2] = new Score( data[i], Integer.parseInt(data[i+1]));
+      highScores[i/3] = new Score( data[i], Integer.parseInt(data[i+1]), Integer.parseInt(data[i+2]) );
     }
   }
   catch(Exception e)
